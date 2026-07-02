@@ -6,101 +6,76 @@
 <title>Happy Birthday Joy ❤️</title>
 
 <style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    overflow: hidden;
-    background: black;
-    color: white;
-    text-align: center;
+body{
+    margin:0;
+    font-family:Arial;
+    background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+    text-align:center;
+    overflow-x:hidden;
 }
 
-/* START SCREEN */
-#startScreen {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg,#ff4e50,#f9d423);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+/* PASSWORD SCREEN */
+#lockScreen{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:black;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+input{
+    padding:12px;
+    border-radius:10px;
+    border:none;
+    text-align:center;
+    font-size:16px;
 }
 
 /* MAIN */
-#main {
-    display: none;
-    padding: 20px;
-    background: linear-gradient(135deg,#ff9a9e,#fad0c4);
-    min-height: 100vh;
+#main{
+    display:none;
+    padding:20px;
 }
 
-/* COUNTDOWN */
-#countdown {
-    font-size: 22px;
-    margin-top: 10px;
-}
-
-/* BUTTON */
-button {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 25px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 10px;
+button{
+    padding:12px 18px;
+    border:none;
+    border-radius:20px;
+    font-weight:bold;
+    margin-top:10px;
+    cursor:pointer;
 }
 
 /* HEARTS */
-.heart {
-    position: absolute;
-    color: red;
-    animation: float 6s linear infinite;
+.heart{
+    position:absolute;
+    color:red;
+    animation:float 6s linear infinite;
+    z-index:1;
 }
 
-@keyframes float {
-    0% {transform: translateY(100vh);}
-    100% {transform: translateY(-10vh); opacity: 0;}
-}
-
-/* FIREWORKS CANVAS */
-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: -1;
-}
-
-/* MESSAGE */
-#message {
-    display:none;
-    margin-top:20px;
-    font-size:18px;
-    line-height:1.6;
-}
-
-/* VIDEO */
-iframe {
-    margin-top: 15px;
-    border-radius: 15px;
+@keyframes float{
+    0%{transform:translateY(100vh); opacity:1;}
+    100%{transform:translateY(-10vh); opacity:0;}
 }
 </style>
 </head>
 
 <body>
 
-<div id="startScreen">
-    <h1>🔐 Enter Password</h1>
-    <p>Hint: It's your name ❤️</p>
+<!-- PASSWORD -->
+<div id="lockScreen">
+    <h2>🔐 Enter Password</h2>
+    <p>Hint: her name ❤️</p>
     <input type="password" id="pass">
     <button onclick="checkPass()">Unlock</button>
 </div>
 
-<canvas id="fireworks"></canvas>
-
+<!-- MAIN -->
 <div id="main">
 
     <h1>🎉 Happy Birthday Joy Nayame Tembo 🎉</h1>
@@ -108,68 +83,76 @@ iframe {
 
     <div id="countdown"></div>
 
-    <button onclick="showMessage()">🎁 Open Your Surprise</button>
+    <button onclick="openMessage()">🎁 Open Your Surprise</button>
 
-    <div id="message">
-        <h2>💌 For You</h2>
-        <p id="typed"></p>
-
-        <h3>🎵 Your Song</h3>
-        <iframe width="300" height="170"
-        src="https://www.youtube.com/embed/7e9B4k6z5aE"
-        allow="autoplay"></iframe>
+    <div id="message" style="display:none;margin-top:20px;">
+        <h2>💌 Message for you</h2>
+        <p id="text"></p>
     </div>
+
 </div>
 
 <script>
-// PASSWORD
+
+// PASSWORD (RESTORED WORKING)
 function checkPass(){
-    let p = document.getElementById("pass").value;
-    if(p.toLowerCase() === "jerome"){
-        document.getElementById("startScreen").style.display="none";
+    let p=document.getElementById("pass").value;
+
+    if(p.toLowerCase()==="joy"){
+        document.getElementById("lockScreen").style.display="none";
         document.getElementById("main").style.display="block";
-        startCountdown();
         startHearts();
+        startCountdown();
     } else {
-        alert("Wrong password 😅 hint: your boyfriend's name");
+        alert("Wrong password 😅 Hint: Joy");
     }
 }
 
-// COUNTDOWN TO TOMORROW
-let target = new Date();
+// COUNTDOWN
+let target=new Date();
 target.setDate(target.getDate()+1);
 target.setHours(0,0,0,0);
 
 function startCountdown(){
     setInterval(()=>{
-        let now = new Date().getTime();
-        let distance = target - now;
+        let now=new Date().getTime();
+        let d=target-now;
 
-        if(distance <= 0){
-            unlockEverything();
-            return;
+        if(d<=0){
+            document.getElementById("message").style.display="block";
+            typeText();
         }
 
-        let h = Math.floor(distance%(1000*60*60*24)/(1000*60*60));
-        let m = Math.floor(distance%(1000*60*60)/(1000*60));
-        let s = Math.floor(distance%(1000*60)/1000);
+        let h=Math.floor(d%(1000*60*60*24)/(1000*60*60));
+        let m=Math.floor(d%(1000*60*60)/(1000*60));
+        let s=Math.floor(d%(1000*60)/1000);
 
-        document.getElementById("countdown").innerHTML =
-        "⏳ Time left: " + h + "h " + m + "m " + s + "s";
+        document.getElementById("countdown").innerHTML=
+        "⏳ Time: "+h+"h "+m+"m "+s+"s";
+
     },1000);
 }
 
-// AUTO UNLOCK
-function unlockEverything(){
+// OPEN BUTTON
+function openMessage(){
     document.getElementById("message").style.display="block";
-    startFireworks();
-    typeMessage();
+    typeText();
 }
 
-// BUTTON OPEN
-function showMessage(){
-    document.getElementById("message").style.display="block";
-    typeMessage();
+// TYPE MESSAGE
+let msg=`My love Joy ❤️
+
+Today I just want you to smile and feel loved. You are special to me in ways words can’t fully explain.
+
+Happy Birthday ❤️`;
+
+let i=0;
+function typeText(){
+    if(i<msg.length){
+        document.getElementById("text").innerHTML+=msg.charAt(i);
+        i++;
+        setTimeout(typeText,30);
+    }
 }
 
 // HEARTS
@@ -184,60 +167,6 @@ function startHearts(){
     },300);
 }
 
-// TYPE MESSAGE
-let text = `My love Joy, today is not just your birthday, it is a reminder that the world became more beautiful the day you were born.
-
-You are my peace, my happiness, and my favourite person in the world. I may not always say it perfectly, but my heart always chooses you.
-
-I hope today makes you smile in ways you never expected. I hope you feel loved, appreciated, and special — because you truly are.
-
-Happy Birthday my love ❤️`;
-
-let i=0;
-function typeMessage(){
-    if(i < text.length){
-        document.getElementById("typed").innerHTML += text.charAt(i);
-        i++;
-        setTimeout(typeMessage,40);
-    }
-}
-
-// FIREWORKS
-let canvas = document.getElementById("fireworks");
-let ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let particles=[];
-
-function startFireworks(){
-    setInterval(()=>{
-        for(let i=0;i<20;i++){
-            particles.push({
-                x: canvas.width/2,
-                y: canvas.height/2,
-                vx: Math.random()*6-3,
-                vy: Math.random()*6-3,
-                life: 100
-            });
-        }
-    },500);
-
-    animate();
-}
-
-function animate(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    particles.forEach((p,i)=>{
-        p.x += p.vx;
-        p.y += p.vy;
-        p.life--;
-        ctx.fillStyle="white";
-        ctx.fillRect(p.x,p.y,3,3);
-        if(p.life<=0) particles.splice(i,1);
-    });
-    requestAnimationFrame(animate);
-}
 </script>
 
 </body>
