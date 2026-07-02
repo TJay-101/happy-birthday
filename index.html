@@ -99,7 +99,15 @@
         <br><br>
         Happy Birthday, Joy. You are truly special. ❤️
       </p>
+<button onclick="showFinalSurprise()">One last surprise 💖</button>
 
+<div id="finalSurprise" style="display:none; margin-top:20px;">
+  <h2>🎂 My birthday wish for you</h2>
+  <p class="letter">
+    I hope this birthday reminds you how loved, valued, and special you are.
+    May your life keep shining brighter every year. ❤️
+  </p>
+</div>
       <h2>🌹 With love</h2>
       <p><b>Jerome Tembo</b></p>
     </div>
@@ -122,7 +130,10 @@
         }, 5000);
       }
     }
-
+function showFinalSurprise() {
+    document.getElementById("finalSurprise").style.display = "block";
+    alert("Happy Birthday Joy ❤️");
+    }
     const birthday = new Date("2026-07-01T00:00:00").getTime();
 
     setInterval(() => {
