@@ -5,111 +5,237 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Happy Birthday Joy ❤️</title>
 
-<link rel="stylesheet" href="style.css">
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    background: black;
+    color: white;
+    text-align: center;
+}
+
+/* START SCREEN */
+#startScreen {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg,#ff4e50,#f9d423);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* MAIN */
+#main {
+    display: none;
+    padding: 20px;
+    background: linear-gradient(135deg,#ff9a9e,#fad0c4);
+    min-height: 100vh;
+}
+
+/* COUNTDOWN */
+#countdown {
+    font-size: 22px;
+    margin-top: 10px;
+}
+
+/* BUTTON */
+button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* HEARTS */
+.heart {
+    position: absolute;
+    color: red;
+    animation: float 6s linear infinite;
+}
+
+@keyframes float {
+    0% {transform: translateY(100vh);}
+    100% {transform: translateY(-10vh); opacity: 0;}
+}
+
+/* FIREWORKS CANVAS */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+/* MESSAGE */
+#message {
+    display:none;
+    margin-top:20px;
+    font-size:18px;
+    line-height:1.6;
+}
+
+/* VIDEO */
+iframe {
+    margin-top: 15px;
+    border-radius: 15px;
+}
+</style>
 </head>
 
 <body>
 
-<div class="hearts"></div>
-
-<div class="container">
-
-<div id="intro">
-
-  <h1>Hello Joy... ❤️</h1>
-
-  <p class="subtitle">
-  Jerome has something special for you.<br><br>
-  Take a deep breath, smile, and tap the button below.
-  </p>
-
-  <button id="startBtn">
-  💖 Open My Surprise
-  </button>
-
+<div id="startScreen">
+    <h1>🔐 Enter Password</h1>
+    <p>Hint: It's your name ❤️</p>
+    <input type="password" id="pass">
+    <button onclick="checkPass()">Unlock</button>
 </div>
 
-<div id="letter" class="hidden">
+<canvas id="fireworks"></canvas>
 
-<h2>My Dearest Joy ❤️</h2>
+<div id="main">
 
-<p>
-Happy Birthday to one of the most wonderful people I've ever known.
-</p>
+    <h1>🎉 Happy Birthday Joy Nayame Tembo 🎉</h1>
+    <p>From: Jerome Tembo ❤️</p>
 
-<p>
-You bring light into every room, peace into difficult moments, and happiness into the lives of those around you.
-</p>
+    <div id="countdown"></div>
 
-<p>
-Your smile is beautiful, your heart is even more beautiful, and today the world celebrates you.
-</p>
+    <button onclick="showMessage()">🎁 Open Your Surprise</button>
 
-<p>
-May God bless you with good health, happiness, success, peace, and countless reasons to smile throughout this new year of your life.
-</p>
+    <div id="message">
+        <h2>💌 For You</h2>
+        <p id="typed"></p>
 
-<p>
-Thank you for being yourself.
-Thank you for every conversation.
-Thank you for every memory.
-</p>
-
-<p>
-I hope today becomes one you'll never forget because you deserve every bit of love and happiness.
-</p>
-
-<div id="letter" class="hidden">
-
-  <h2>❤️ Happy Birthday Joy ❤️</h2>
-
-  <button id="finalBtn">Open My Heart ❤️</button>
+        <h3>🎵 Your Song</h3>
+        <iframe width="300" height="170"
+        src="https://www.youtube.com/embed/7e9B4k6z5aE"
+        allow="autoplay"></iframe>
+    </div>
 </div>
 
-<div id="finalMessage" class="hidden">
+<script>
+// PASSWORD
+function checkPass(){
+    let p = document.getElementById("pass").value;
+    if(p.toLowerCase() === "jerome"){
+        document.getElementById("startScreen").style.display="none";
+        document.getElementById("main").style.display="block";
+        startCountdown();
+        startHearts();
+    } else {
+        alert("Wrong password 😅 hint: your boyfriend's name");
+    }
+}
 
-<h1>❤️ One Last Thing... ❤️</h1>
+// COUNTDOWN TO TOMORROW
+let target = new Date();
+target.setDate(target.getDate()+1);
+target.setHours(0,0,0,0);
 
-<p>
-Before you go...
-</p>
+function startCountdown(){
+    setInterval(()=>{
+        let now = new Date().getTime();
+        let distance = target - now;
 
-<p>
-I just want you to know something important.
-</p>
+        if(distance <= 0){
+            unlockEverything();
+            return;
+        }
 
-<p>
-If I had the chance to live life again...
-</p>
+        let h = Math.floor(distance%(1000*60*60*24)/(1000*60*60));
+        let m = Math.floor(distance%(1000*60*60)/(1000*60));
+        let s = Math.floor(distance%(1000*60)/1000);
 
-<p>
-I'd still choose meeting you.
-</p>
+        document.getElementById("countdown").innerHTML =
+        "⏳ Time left: " + h + "h " + m + "m " + s + "s";
+    },1000);
+}
 
-<p>
-I'd still choose your smile.
-</p>
+// AUTO UNLOCK
+function unlockEverything(){
+    document.getElementById("message").style.display="block";
+    startFireworks();
+    typeMessage();
+}
 
-<p>
-I'd still choose every memory we've shared.
-</p>
+// BUTTON OPEN
+function showMessage(){
+    document.getElementById("message").style.display="block";
+    typeMessage();
+}
 
-<h2>Happy Birthday, Joy Nayame ❤️</h2>
+// HEARTS
+function startHearts(){
+    setInterval(()=>{
+        let h=document.createElement("div");
+        h.className="heart";
+        h.innerHTML="❤️";
+        h.style.left=Math.random()*100+"vw";
+        document.body.appendChild(h);
+        setTimeout(()=>h.remove(),6000);
+    },300);
+}
 
-<p>
-No matter where life takes us,
-you will always matter to me.
-</p>
+// TYPE MESSAGE
+let text = `My love Joy, today is not just your birthday, it is a reminder that the world became more beautiful the day you were born.
 
-<h3>With all my love,</h3>
+You are my peace, my happiness, and my favourite person in the world. I may not always say it perfectly, but my heart always chooses you.
 
-<h2>Jerome Tembo ❤️</h2>
+I hope today makes you smile in ways you never expected. I hope you feel loved, appreciated, and special — because you truly are.
 
-</div>
+Happy Birthday my love ❤️`;
 
-</div>
+let i=0;
+function typeMessage(){
+    if(i < text.length){
+        document.getElementById("typed").innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typeMessage,40);
+    }
+}
 
-<script src="script.js"></script>
+// FIREWORKS
+let canvas = document.getElementById("fireworks");
+let ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles=[];
+
+function startFireworks(){
+    setInterval(()=>{
+        for(let i=0;i<20;i++){
+            particles.push({
+                x: canvas.width/2,
+                y: canvas.height/2,
+                vx: Math.random()*6-3,
+                vy: Math.random()*6-3,
+                life: 100
+            });
+        }
+    },500);
+
+    animate();
+}
+
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach((p,i)=>{
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+        ctx.fillStyle="white";
+        ctx.fillRect(p.x,p.y,3,3);
+        if(p.life<=0) particles.splice(i,1);
+    });
+    requestAnimationFrame(animate);
+}
+</script>
 
 </body>
 </html>
