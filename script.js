@@ -24,8 +24,10 @@ function createHeart() {
 setInterval(createHeart, 400);
 
 // Open the letter
+const intro = document.getElementById("intro");
+
 startBtn.addEventListener("click", () => {
-  startBtn.style.display = "none";
+  intro.style.display = "none";   // 👈 hides the whole opening section
   letter.classList.remove("hidden");
   letter.scrollIntoView({ behavior: "smooth" });
 });
