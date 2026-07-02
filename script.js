@@ -37,6 +37,12 @@ finalBtn.addEventListener("click", () => {
   letter.classList.add("hidden");
   finalMessage.classList.remove("hidden");
 
+  // stop hearts so focus is on message
+  hearts.innerHTML = "";
+
+  finalMessage.scrollIntoView({ behavior: "smooth" });
+});
+
   // Simple confetti effect using emojis
   for (let i = 0; i < 60; i++) {
     const confetti = document.createElement("div");
